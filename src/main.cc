@@ -13,7 +13,7 @@ int main() {
     for (auto j = image_height - 1; j >= 0; j--) {
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
         for (auto i = 0; i < image_width; i++) {
-            color pixel_color(double(i) / (image_width - 1),
+            Color pixel_color(double(i) / (image_width - 1),
                               double(j) / (image_height - 1), 0.25);
             write_color(std::cout, pixel_color);
         }
