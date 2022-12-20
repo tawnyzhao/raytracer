@@ -45,6 +45,16 @@ class Vec3 {
     std::array<double, 3> e;
 };
 
+std::ostream &operator<<(std::ostream &out, const Vec3 &v);
+Vec3 operator+(const Vec3 &u, const Vec3 &v);
+Vec3 operator-(const Vec3 &u, const Vec3 &v);
+Vec3 operator*(const Vec3 &u, const Vec3 &v);
+Vec3 operator*(double t, const Vec3 &v);
+Vec3 operator*(const Vec3 &v, double t);
+Vec3 operator/(Vec3 v, double t);
+double dot(const Vec3 &u, const Vec3 &v);
+Vec3 cross(const Vec3 &u, const Vec3 &v);
+Vec3 unit_vector(Vec3 v);
 
 
 using Point3 = Vec3;
