@@ -56,7 +56,6 @@ double dot(const Vec3 &u, const Vec3 &v);
 Vec3 cross(const Vec3 &u, const Vec3 &v);
 Vec3 unit_vector(Vec3 v);
 
-
 using Point3 = Vec3;
 using Color = Vec3;
 

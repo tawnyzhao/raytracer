@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 #include "color.h"
 #include "vec3.h"
@@ -23,17 +24,42 @@
 //     }
 //     std::cerr << "\nDone.\n";
 // }
+double hit_sphere(const Point3 &center, double radius, const Ray &r) {
+	Vec3 oc = r.origin() - center;
+	auto a = dot(r.direction(), r.direction());
+	auto b = 2.0 * dot(oc, r.direction());
+	auto c = dot(oc, oc) - radius*radius;
+
+	auto discriminant = b*b - 4*a*c;
+	if (discriminant < 0) {
+		return -1.0;
+	} else { // return the closest hit point
+		return (-b - std::sqrt(discriminant)) / (2.0 * a);
+	}
+	return (discriminant >= 0);
+}
 
 Color ray_color(const Ray& r) {
+	// sphere
+	auto circle_center = Point3(0,0,-1);
+	auto circle_radius = 0.5;
+	auto t = hit_sphere(circle_center, circle_radius, r);
+
+	if (t > 0.0) {
+		Vec3 N = unit_vector(r.at(t) - circle_center);
+		return 0.5*Color(N.x() + 1, N.y() + 1, N.z() + 1);  // coordinates is originally from -1 to 1, convert to 0 to 1
+	}
+
+	// background
 	Vec3 unit_direction = unit_vector(r.direction());
-	auto t = 0.5*(unit_direction.y() + 1.0); // y is originally from -1 to 1, convert to 0 to 1
-	return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
+	t = 0.5*(unit_direction.y() + 1.0); // y is originally from -1 to 1, convert to 0 to 1
+	return (1.0 - t) * Color(0.6, 0.2, 0.3) + t * Color(0.1, 0.3, 0.7);
 }
 
 int main() {
 	// image 
 	const auto aspect_ratio = 16.0 / 9.0;
-    const auto image_width = 400;
+    const auto image_width = 1000;
     const auto image_height = static_cast<int>(image_width / aspect_ratio);
 
 	// camera
