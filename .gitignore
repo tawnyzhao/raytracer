@@ -1,4 +1,5 @@
 /.DS_Store
 /.vscode
-/image.ppm
+image.ppm
 build
+target
