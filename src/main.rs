@@ -49,8 +49,8 @@ fn main() {
     // materials
     let matte_green: Rc<dyn Material> = Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)));
     let matte_red: Rc<dyn Material> = Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.3)));
-    let metal_grey: Rc<dyn Material> = Rc::new(Metal::new(Color::new(0.8, 0.8, 0.8)));
-    let metal_blue: Rc<dyn Material> = Rc::new(Metal::new(Color::new(0.6, 0.6, 0.9)));
+    let metal_grey: Rc<dyn Material> = Rc::new(Metal::new(Color::new(0.8, 0.8, 0.8), 0.01));
+    let metal_blue: Rc<dyn Material> = Rc::new(Metal::new(Color::new(0.2, 0.2, 0.7), 1.0));
 
 
     // world
