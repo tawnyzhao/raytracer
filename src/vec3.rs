@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Sub, Deref};
+use std::ops::{Add, AddAssign, Deref, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Sub};
 
 use crate::utils::random_double;
 
@@ -22,7 +22,13 @@ impl Vec3 {
     }
 
     pub fn random(min: f64, max: f64) -> Self {
-        Vec3 { e: [random_double(min, max), random_double(min, max), random_double(min, max)] } 
+        Vec3 {
+            e: [
+                random_double(min, max),
+                random_double(min, max),
+                random_double(min, max),
+            ],
+        }
     }
 
     pub fn x(&self) -> f64 {
@@ -43,6 +49,12 @@ impl Vec3 {
         self.e[0].powi(2) + self.e[1].powi(2) + self.e[2].powi(2)
     }
 
+    pub fn near_zero(&self) -> bool {
+        let epsilon = 1e-8;
+        (f64::abs(self.e[0]) < epsilon)
+            && (f64::abs(self.e[1]) < epsilon)
+            && (f64::abs(self.e[2]) < epsilon)
+    }
 }
 
 pub fn dot(p1: Vec3, p2: Vec3) -> f64 {
@@ -81,6 +93,10 @@ pub fn random_in_hemisphere(normal: Vec3) -> Vec3 {
     } else {
         -in_unit_sphere
     }
+}
+
+pub fn reflect(v: Vec3, n: Vec3) -> Vec3 {
+    v - 2.0*dot(v,n)*n
 }
 
 impl Neg for Vec3 {
@@ -181,7 +197,7 @@ impl Mul<f64> for Vec3 {
 impl Mul<Vec3> for f64 {
     type Output = Vec3;
     fn mul(self, rhs: Vec3) -> Self::Output {
-        rhs*self
+        rhs * self
     }
 }
 
@@ -193,7 +209,6 @@ impl Div<f64> for Vec3 {
         }
     }
 }
-
 
 mod tests {
     use super::*;
@@ -282,6 +297,4 @@ mod tests {
         assert_eq!(dot(p1, p2), 4.0 + 10.0 + 18.0);
         assert_eq!(cross(p1, p2), Vec3::new(-3.0, 6.0, -3.0));
     }
-
-
 }

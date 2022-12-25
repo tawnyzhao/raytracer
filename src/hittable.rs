@@ -2,13 +2,14 @@ use std::rc::Rc;
 
 use crate::{
     ray::Ray,
-    vec3::{dot, Point, Vec3},
+    vec3::{dot, Point, Vec3}, material::Material,
 };
 
-#[derive(Default, Clone, Copy)]
+#[derive(Default, Clone)]
 pub struct HitRecord {
     pub p: Point,
     pub normal: Vec3,
+    pub material: Option<Rc<dyn Material>>,
     pub t: f64,
 
     pub front_face: bool,
