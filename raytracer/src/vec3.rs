@@ -5,8 +5,8 @@ pub struct Vec3 {
     e: [f64; 3],
 }
 
-type Point = Vec3;
-type Color = Vec3;
+pub type Point = Vec3;
+pub type Color = Vec3;
 
 impl Default for Vec3 {
     fn default() -> Self {
