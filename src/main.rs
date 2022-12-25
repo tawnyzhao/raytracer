@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use hittable::{Hittable, HitRecord};
 use ray::Ray;
-use vec3::unit_vector;
+use vec3::{unit_vector, random_in_unit_sphere, random_unit_vector};
 
 use crate::{
     camera::Camera, color::write_color, hittable::HittableList, sphere::Sphere, vec3::{Vec3, Point, Color}, utils::random_double,
@@ -16,12 +16,20 @@ mod sphere;
 mod utils;
 mod vec3;
 
-fn ray_color(ray: &Ray, world: &dyn Hittable) -> Color {
+fn ray_color(ray: &Ray, world: &dyn Hittable, depth: i32) -> Color {
     let mut rec: HitRecord = Default::default();
-    if (world.hit(ray, 0.0, f64::INFINITY, &mut rec)) {
-        return 0.5 * (rec.normal + Color::new(1.0,1.0,1.0));
+    if depth <= 0 {
+        return Color::new(0.0, 0.0, 0.0);
     }
-    let unit_direction = unit_vector(&ray.direction());
+
+    if world.hit(ray, 0.001, f64::INFINITY, &mut rec) {
+        // let target = rec.p + rec.normal + random_in_unit_sphere(); // cos^3 distribution
+        let target = rec.p + rec.normal + random_unit_vector(); // cos distribution (approximation)
+        // let target = rec.p + rec.normal + random_in_hemisphere(rec.normal); // uniform
+
+        return 0.5 * ray_color(&Ray::new(rec.p, target - rec.p), world, depth - 1);
+    }
+    let unit_direction = unit_vector(ray.direction());
     let t = 0.5*(unit_direction.y() + 1.0);
     return (1.0 - t)*Color::new(1.0, 1.0, 1.0) + t*Color::new(0.5, 0.7, 1.0);
 }
@@ -31,6 +39,8 @@ fn main() {
     let image_width = 1000;
     let image_height = (image_width as f64 / aspect_ratio) as i32;
     let samples_per_pixel = 100;
+    let max_depth = 50;
+
     // world
     let mut world = HittableList::new();
     world.add(Rc::new(Sphere::new(Point::new(0.0, -0.2, -1.0), 0.5)));
@@ -51,7 +61,7 @@ fn main() {
                 let u = (i as f64 + random_double(0.0, 1.0)) / ((image_width - 1) as f64);
                 let v = (j as f64 + random_double(0.0, 1.0)) / ((image_height - 1) as f64);
                 let ray = cam.get_ray(u, v);
-                pixel_color += ray_color(&ray,&world);
+                pixel_color += ray_color(&ray,&world, max_depth);
             }
             write_color(pixel_color, samples_per_pixel);
         }

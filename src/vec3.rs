@@ -1,5 +1,7 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Sub, Deref};
 
+use crate::utils::random_double;
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Vec3 {
     e: [f64; 3],
@@ -19,6 +21,10 @@ impl Vec3 {
         Vec3 { e: [e0, e1, e2] }
     }
 
+    pub fn random(min: f64, max: f64) -> Self {
+        Vec3 { e: [random_double(min, max), random_double(min, max), random_double(min, max)] } 
+    }
+
     pub fn x(&self) -> f64 {
         self.e[0]
     }
@@ -36,13 +42,14 @@ impl Vec3 {
     pub fn length_squared(&self) -> f64 {
         self.e[0].powi(2) + self.e[1].powi(2) + self.e[2].powi(2)
     }
+
 }
 
-pub fn dot(p1: &Vec3, p2: &Vec3) -> f64 {
+pub fn dot(p1: Vec3, p2: Vec3) -> f64 {
     p1[0] * p2[0] + p1[1] * p2[1] + p1[2] * p2[2]
 }
 
-pub fn cross(p1: &Vec3, p2: &Vec3) -> Vec3 {
+pub fn cross(p1: Vec3, p2: Vec3) -> Vec3 {
     Vec3::new(
         p1.e[1] * p2.e[2] - p1.e[2] * p2.e[1],
         p1.e[2] * p2.e[0] - p1.e[0] * p2.e[2],
@@ -50,8 +57,30 @@ pub fn cross(p1: &Vec3, p2: &Vec3) -> Vec3 {
     )
 }
 
-pub fn unit_vector(p: &Vec3) -> Vec3 {
-    *p / p.length()
+pub fn unit_vector(p: Vec3) -> Vec3 {
+    p / p.length()
+}
+
+pub fn random_in_unit_sphere() -> Vec3 {
+    loop {
+        let p = Vec3::random(-1.0, 1.0);
+        if p.length_squared() < 1.0 {
+            return p;
+        }
+    }
+}
+
+pub fn random_unit_vector() -> Vec3 {
+    unit_vector(random_in_unit_sphere())
+}
+
+pub fn random_in_hemisphere(normal: Vec3) -> Vec3 {
+    let in_unit_sphere = random_in_unit_sphere();
+    if dot(normal, in_unit_sphere) > 0.0 {
+        in_unit_sphere
+    } else {
+        -in_unit_sphere
+    }
 }
 
 impl Neg for Vec3 {
@@ -250,8 +279,8 @@ mod tests {
         let p1 = Vec3::new(1.0, 2.0, 3.0);
         let p2 = Vec3::new(4.0, 5.0, 6.0);
 
-        assert_eq!(dot(&p1, &p2), 4.0 + 10.0 + 18.0);
-        assert_eq!(cross(&p1, &p2), Vec3::new(-3.0, 6.0, -3.0));
+        assert_eq!(dot(p1, p2), 4.0 + 10.0 + 18.0);
+        assert_eq!(cross(p1, p2), Vec3::new(-3.0, 6.0, -3.0));
     }
 
 
