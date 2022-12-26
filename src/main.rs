@@ -7,13 +7,14 @@ use vec3::{random_in_unit_sphere, random_unit_vector, unit_vector};
 use crate::{
     camera::Camera,
     color::write_color,
+    dielectric::Dielectric,
     hittable::HittableList,
     lambertian::Lambertian,
     material::Material,
     metal::Metal,
     sphere::Sphere,
     utils::random_double,
-    vec3::{Color, Point, Vec3}, dielectric::Dielectric,
+    vec3::{Color, Point, Vec3},
 };
 
 mod camera;
@@ -89,8 +90,13 @@ fn main() {
         Rc::clone(&metal_blue),
     )));
 
-
-    let cam = Camera::new();
+    let cam = Camera::new(
+        Point::new(-2.0, 2.0, 1.0),
+        Point::new(0.0, 0.0, -1.0),
+        Vec3::new(0.0, 1.0, 0.0),
+        30.0,
+        aspect_ratio,
+    );
 
     println!("P3");
     println!("{image_width} {image_height}");
