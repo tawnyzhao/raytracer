@@ -59,32 +59,32 @@ fn random_scene() -> HittableList {
         ground_material,
     ));
     world.add(ground);
-    // for a in -11..11 {
-    //     for b in -11..11 {
-    //         let choose_mat = random_double(0.0, 1.0);
-    //         let center = Point::new(
-    //             a as f64 + 0.9 * random_double(0.0, 1.0),
-    //             0.2,
-    //             b as f64 + 0.9 * random_double(0.0, 1.0),
-    //         );
+    for a in -11..11 {
+        for b in -11..11 {
+            let choose_mat = random_double(0.0, 1.0);
+            let center = Point::new(
+                a as f64 + 0.9 * random_double(0.0, 1.0),
+                0.2,
+                b as f64 + 0.9 * random_double(0.0, 1.0),
+            );
 
-    //         if (center - Point::new(4.0, 0.2, 0.0)).length() > 0.9 {
-    //             if choose_mat < 0.8 {
-    //                 let albedo = Color::random(0.0, 1.0) * Color::random(0.0, 1.0);
-    //                 let sphere_material: Rc<dyn Material> = Rc::new(Lambertian::new(albedo));
-    //                 world.add(Rc::new(Sphere::new(center, 0.2, sphere_material)));
-    //             } else if choose_mat < 0.95 {
-    //                 let albedo = Color::random(0.0, 1.0) * Color::random(0.0, 1.0);
-    //                 let fuzz = random_double(0.0, 0.5);
-    //                 let sphere_material: Rc<dyn Material> = Rc::new(Metal::new(albedo, fuzz));
-    //                 world.add(Rc::new(Sphere::new(center, 0.2, sphere_material)));
-    //             } else {
-    //                 let sphere_material: Rc<dyn Material> = Rc::new(Dielectric::new(1.5));
-    //                 world.add(Rc::new(Sphere::new(center, 0.2, sphere_material)));
-    //             }
-    //         }
-    //     }
-    // }
+            if (center - Point::new(4.0, 0.2, 0.0)).length() > 0.9 {
+                if choose_mat < 0.8 {
+                    let albedo = Color::random(0.0, 1.0) * Color::random(0.0, 1.0);
+                    let sphere_material: Rc<dyn Material> = Rc::new(Lambertian::new(albedo));
+                    world.add(Rc::new(Sphere::new(center, 0.2, sphere_material)));
+                } else if choose_mat < 0.95 {
+                    let albedo = Color::random(0.0, 1.0) * Color::random(0.0, 1.0);
+                    let fuzz = random_double(0.0, 0.5);
+                    let sphere_material: Rc<dyn Material> = Rc::new(Metal::new(albedo, fuzz));
+                    world.add(Rc::new(Sphere::new(center, 0.2, sphere_material)));
+                } else {
+                    let sphere_material: Rc<dyn Material> = Rc::new(Dielectric::new(1.5));
+                    world.add(Rc::new(Sphere::new(center, 0.2, sphere_material)));
+                }
+            }
+        }
+    }
 
     let glass_material: Rc<dyn Material> = Rc::new(Dielectric::new(1.5));
     world.add(Rc::new(Sphere::new(
@@ -94,13 +94,13 @@ fn random_scene() -> HittableList {
     )));
     let lambertian_material: Rc<dyn Material> = Rc::new(Lambertian::new(Color::new(0.2, 0.2, 0.8)));
     world.add(Rc::new(Sphere::new(
-        Point::new(-2.0, 1.0, 0.0),
+        Point::new(-4.0, 1.0, 0.0),
         1.0,
         Rc::clone(&lambertian_material),
     )));
     let metal_material: Rc<dyn Material> = Rc::new(Metal::new(Color::new(0.7, 0.6, 0.5), 0.0));
     world.add(Rc::new(Sphere::new(
-        Point::new(2.0, 1.0, 0.0),
+        Point::new(4.0, 1.0, 0.0),
         1.0,
         Rc::clone(&metal_material),
     )));
@@ -110,9 +110,9 @@ fn random_scene() -> HittableList {
 
 fn main() {
     let aspect_ratio = 16.0 / 9.0;
-    let image_width = 1200;
+    let image_width = 1600;
     let image_height = (image_width as f64 / aspect_ratio) as i32;
-    let samples_per_pixel = 500;
+    let samples_per_pixel = 700;
     let max_depth = 50;
     // materials
     let matte_green: Rc<dyn Material> = Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)));
@@ -150,8 +150,8 @@ fn main() {
     // )));
 
     let cam = Camera::new(
-        Point::new(0.0, 2.0, 10.0),
-        Point::new(0.0, 1.0, 0.0),
+        Point::new(13.0, 2.0, 3.0),
+        Point::new(0.0, 0.0, 0.0),
         Vec3::new(0.0, 1.0, 0.0),
         20.0,
         aspect_ratio,
