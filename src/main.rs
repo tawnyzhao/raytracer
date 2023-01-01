@@ -1,4 +1,5 @@
 use hittable::{HitRecord, Hittable};
+use material::{lambertian::Lambertian, dielectric::Dielectric, metal::Metal};
 use ray::Ray;
 use std::rc::Rc;
 use vec3::{random_in_unit_sphere, random_unit_vector, unit_vector};
@@ -6,11 +7,8 @@ use vec3::{random_in_unit_sphere, random_unit_vector, unit_vector};
 use crate::{
     camera::Camera,
     color::write_color,
-    dielectric::Dielectric,
     hittable::HittableList,
-    lambertian::Lambertian,
     material::Material,
-    metal::Metal,
     sphere::Sphere,
     utils::random_double,
     vec3::{Color, Point, Vec3},
@@ -18,11 +16,8 @@ use crate::{
 
 mod camera;
 mod color;
-mod dielectric;
 mod hittable;
-mod lambertian;
 mod material;
-mod metal;
 mod ray;
 mod sphere;
 mod utils;
@@ -59,7 +54,7 @@ fn random_scene() -> HittableList {
         ground_material,
     ));
     world.add(ground);
-    for a in -11..11 {
+    for a in -11..11 {  
         for b in -11..11 {
             let choose_mat = random_double(0.0, 1.0);
             let center = Point::new(
