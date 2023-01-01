@@ -1,48 +1,15 @@
-use hittable::{HitRecord, Hittable};
-use material::{lambertian::Lambertian, dielectric::Dielectric, metal::Metal};
-use ray::Ray;
+use raytracer::material::Material;
+use raytracer::material::{dielectric::Dielectric, lambertian::Lambertian, metal::Metal};
+use raytracer::ray_color;
 use std::rc::Rc;
-use vec3::unit_vector;
 
-use crate::{
-    camera::Camera,
-    color::write_color,
-    hittable::HittableList,
-    material::Material,
-    sphere::Sphere,
-    utils::random_double,
-    vec3::{Color, Point, Vec3},
-};
+use raytracer::camera::Camera;
+use raytracer::color::write_color;
+use raytracer::hittable::HittableList;
+use raytracer::sphere::Sphere;
+use raytracer::utils::random_double;
+use raytracer::vec3::{Color, Point, Vec3};
 
-mod camera;
-mod color;
-mod hittable;
-mod material;
-mod ray;
-mod sphere;
-mod utils;
-mod vec3;
-
-fn ray_color(ray: &Ray, world: &dyn Hittable, depth: i32) -> Color {
-    let mut rec: HitRecord = Default::default();
-    if depth <= 0 {
-        return Color::new(0.0, 0.0, 0.0);
-    }
-
-    if world.hit(ray, 0.001, f64::INFINITY, &mut rec) {
-        let mut scattered: Ray = Default::default();
-        let mut attenuation: Color = Default::default();
-        if let Some(ref mat) = rec.material {
-            if mat.scatter(ray, &rec, &mut attenuation, &mut scattered) {
-                return attenuation * ray_color(&scattered, world, depth - 1);
-            }
-        }
-        return Color::new(0.0, 0.0, 0.0);
-    }
-    let unit_direction = unit_vector(ray.direction());
-    let t = 0.5 * (unit_direction.y() + 1.0);
-    return (1.0 - t) * Color::new(1.0, 1.0, 1.0) + t * Color::new(0.5, 0.7, 1.0);
-}
 
 fn random_scene() -> HittableList {
     let mut world = HittableList::new();
@@ -54,7 +21,7 @@ fn random_scene() -> HittableList {
         ground_material,
     ));
     world.add(ground);
-    for a in -11..11 {  
+    for a in -11..11 {
         for b in -11..11 {
             let choose_mat = random_double(0.0, 1.0);
             let center = Point::new(
