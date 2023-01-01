@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, Deref, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Sub};
+use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Sub};
 
 use crate::utils::random_double;
 
@@ -227,6 +227,7 @@ impl Div<f64> for Vec3 {
     }
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
 

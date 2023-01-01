@@ -28,8 +28,9 @@ impl Ray {
     }
 }
 
+#[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::{vec3::{Point, Vec3}, ray::Ray};
 
     #[test]
     fn ray() {

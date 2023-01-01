@@ -2,7 +2,7 @@ use hittable::{HitRecord, Hittable};
 use material::{lambertian::Lambertian, dielectric::Dielectric, metal::Metal};
 use ray::Ray;
 use std::rc::Rc;
-use vec3::{random_in_unit_sphere, random_unit_vector, unit_vector};
+use vec3::unit_vector;
 
 use crate::{
     camera::Camera,
@@ -109,40 +109,9 @@ fn main() {
     let image_height = (image_width as f64 / aspect_ratio) as i32;
     let samples_per_pixel = 700;
     let max_depth = 50;
-    // materials
-    let matte_green: Rc<dyn Material> = Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)));
-    let matte_purple: Rc<dyn Material> = Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)));
-    let metal_grey: Rc<dyn Material> = Rc::new(Metal::new(Color::new(0.8, 0.8, 0.8), 0.05));
-    let metal_blue: Rc<dyn Material> = Rc::new(Metal::new(Color::new(0.2, 0.2, 0.7), 1.0));
-    let glass: Rc<dyn Material> = Rc::new(Dielectric::new(1.5));
+
     // world
     let world = random_scene();
-    // let mut world = HittableList::new();
-    // world.add(Rc::new(Sphere::new(
-    //     Point::new(0.0, -100.5, -1.0),
-    //     100.0,
-    //     Rc::clone(&matte_green),
-    // )));
-    // world.add(Rc::new(Sphere::new(
-    //     Point::new(0.0, 0.0, -1.0),
-    //     0.5,
-    //     Rc::clone(&matte_purple),
-    // )));
-    // world.add(Rc::new(Sphere::new(
-    //     Point::new(-1.0, 0.0, -1.0),
-    //     0.5,
-    //     Rc::clone(&metal_grey),
-    // )));
-    // world.add(Rc::new(Sphere::new(
-    //     Point::new(1.0, 0.0, -1.0),
-    //     0.5,
-    //     Rc::clone(&glass),
-    // )));
-    // world.add(Rc::new(Sphere::new(
-    //     Point::new(1.0, 1.0, -3.0),
-    //     1.0,
-    //     Rc::clone(&metal_blue),
-    // )));
 
     let cam = Camera::new(
         Point::new(13.0, 2.0, 3.0),
@@ -162,7 +131,7 @@ fn main() {
         eprint!("\x1b[2K\rScanlines remaining: {j}");
         for i in 0..image_width {
             let mut pixel_color = Color::new(0.0, 0.0, 0.0);
-            for s in 0..samples_per_pixel {
+            for _ in 0..samples_per_pixel {
                 let u = (i as f64 + random_double(0.0, 1.0)) / ((image_width - 1) as f64);
                 let v = (j as f64 + random_double(0.0, 1.0)) / ((image_height - 1) as f64);
                 let ray = cam.get_ray(u, v);

@@ -9,7 +9,8 @@ pub struct Camera {
     lower_left_corner: Point,
     horizontal: Vec3,
     vertical: Vec3,
-
+    
+    #[allow(dead_code)]
     w: Vec3,
     u: Vec3,
     v: Vec3,

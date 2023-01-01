@@ -43,7 +43,8 @@ impl HittableList {
     pub fn add(&mut self, object: Rc<dyn Hittable>) {
         self.objects.push(object);
     }
-
+    
+    #[allow(dead_code)]
     pub fn clear(&mut self) {
         self.objects.clear();
     }

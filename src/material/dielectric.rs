@@ -1,6 +1,6 @@
 use crate::{
     material::Material,
-    vec3::{reflect, refract, unit_vector, Color, Vec3, dot}, utils::random_double, ray::Ray,
+    vec3::{reflect, refract, unit_vector, Color, dot}, utils::random_double, ray::Ray,
 };
 
 pub struct Dielectric {
