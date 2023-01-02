@@ -9,7 +9,6 @@ use utils::random_double;
 use vec3::{unit_vector, Color, Vec3};
 
 pub mod camera;
-pub mod color;
 pub mod hittable;
 pub mod image;
 pub mod material;
@@ -32,7 +31,7 @@ pub fn create_image(
                 ProgressStyle::with_template(
                     "Scanlines remaining:\n {bar:40} {pos}/{len} [{elapsed_precise}]",
                 )
-                .expect("Valid style"),
+                .expect("Should be a valid style"),
             ),
     );
 
@@ -57,7 +56,8 @@ pub fn create_image(
         })
         .collect()
 }
-pub fn ray_color(ray: &Ray, world: &dyn Hittable, depth: i32) -> Color {
+
+fn ray_color(ray: &Ray, world: &dyn Hittable, depth: i32) -> Color {
     if depth <= 0 {
         return Color::new(0.0, 0.0, 0.0);
     }

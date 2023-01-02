@@ -1,4 +1,4 @@
-use raytracer::image::print_ppm;
+use raytracer::image::{print_ppm_binary};
 use raytracer::material::Material;
 use raytracer::material::{dielectric::Dielectric, lambertian::Lambertian, metal::Metal};
 use raytracer::{create_image};
@@ -77,7 +77,7 @@ fn random_scene() -> HittableList {
 
 fn main() {
     let aspect_ratio = 16.0 / 9.0;
-    let image_width = 500;
+    let image_width = 1600;
     let image_height = (image_width as f64 / aspect_ratio) as i32;
     let samples_per_pixel = 50;
     let max_depth = 50;
@@ -96,6 +96,6 @@ fn main() {
     );
 
     let image: Vec<Color> = create_image(image_height, image_width, samples_per_pixel, max_depth, &cam, &world);
-    print_ppm(&image, image_width, image_height, samples_per_pixel);
+    print_ppm_binary(&image, image_width, image_height, samples_per_pixel);
     eprintln!("Done.")
 }
