@@ -1,7 +1,9 @@
 use crate::{
     material::Material,
-    vec3::{reflect, refract, unit_vector, Color, dot}, utils::random_double, ray::Ray,
+    vec3::{unit_vector, Color, dot}, utils::random_double, ray::Ray,
 };
+
+use super::{reflect, refract};
 
 pub struct Dielectric {
     index_of_refraction: f64,

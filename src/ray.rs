@@ -6,7 +6,6 @@ pub struct Ray {
     direction: Vec3
 }
 
-
 impl Ray {
     pub fn new(origin: Point, direction: Vec3) -> Self {
         Ray {

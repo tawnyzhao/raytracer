@@ -2,8 +2,10 @@ use crate::{
     material::Material,
     ray::Ray,
     utils::clamp,
-    vec3::{random_in_unit_sphere, reflect, unit_vector, Color, dot},
+    vec3::{random_in_unit_sphere, unit_vector, Color, dot},
 };
+
+use super::reflect;
 
 pub struct Metal {
     albedo: Color,

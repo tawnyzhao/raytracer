@@ -1,10 +1,8 @@
-use indicatif::ParallelProgressIterator;
-use rayon::prelude::*;
 use raytracer::image::print_ppm;
 use raytracer::material::Material;
 use raytracer::material::{dielectric::Dielectric, lambertian::Lambertian, metal::Metal};
-use raytracer::ray_color;
-use std::sync::Arc;
+use raytracer::{create_image};
+use std::sync::{Arc};
 
 use raytracer::camera::Camera;
 use raytracer::hittable::sphere::Sphere;
@@ -97,58 +95,6 @@ fn main() {
         10.0,
     );
 
-    // println!("P3");
-    // println!("{image_width} {image_height}");
-    // println!("255"); // color depth
-    let image: Vec<Color> = (0..image_height)
-        .into_par_iter()
-        .rev()
-        .flat_map(|y| {
-            (0..image_width)
-                .map(|x| {
-                    let color: Vec3 =
-                        (0..samples_per_pixel).fold(Color::new(0.0, 0.0, 0.0), |acc, _| {
-                            let u = (x as f64 + random_double(0.0, 1.0)) / (image_width) as f64;
-                            let v = (y as f64 + random_double(0.0, 1.0)) / (image_height) as f64;
-                            let ray = cam.get_ray(u, v);
-                            acc + ray_color(&ray, &world, max_depth)
-                        });
-                    color
-                })
-                .collect::<Vec<Color>>()
-        })
-        .collect();
-
+    let image: Vec<Color> = create_image(image_height, image_width, samples_per_pixel, max_depth, &cam, &world);
     print_ppm(&image, image_width, image_height, samples_per_pixel);
-    // let image: Vec<Color> = (0..image_width * image_height)
-    //     .par_iter()
-    //     .map(|pidx: usize| {
-    //         // Compute image coordinates in camera space.
-    //         let i = (pidx % image_width) as f32;
-    //         let j = (image_height - 1 - (pidx / image_width)) as f32;
-    //         (0..samples_per_pixel).map(Color::zero(), |acc, _| {
-    //             let u = (i + random_double(0.0, 1.0)) * rwidth;
-    //             let v = (j + random_f32_01()) * rheight;
-    //             let r = camera.get_ray(u, v);
-    //             ray_color(&r, &world, max_depth)
-    //         }) / samples_per_pixel as f32
-    //     })
-    //     .collect();
-
-    // for j in (0..image_height).rev() {
-    //     for i in 0..image_width {
-    //         let pixel_color: Color = (0..samples_per_pixel)
-    //             .map(|| {
-    //                 let u = (i as f64 + random_double(0.0, 1.0)) / ((image_width - 1) as f64);
-    //                 let v = (j as f64 + random_double(0.0, 1.0)) / ((image_height - 1) as f64);
-    //                 let ray = cam.get_ray(u, v);
-    //                 ray_color(&ray, &world, max_depth)
-    //             })
-    //             .sum();
-    //     }
-    // }
-
-    // eprint!("\x1b[2K\rScanlines remaining: {j}");
-    // eprintln!();
-    // eprintln!("Done.");
 }
