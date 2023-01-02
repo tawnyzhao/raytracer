@@ -30,9 +30,7 @@ impl Material for Lambertian {
         &self,
         _: &crate::ray::Ray,
         rec: &crate::hittable::HitRecord,
-        attenuation: &mut Color,
-        scattered: &mut Ray,
-    ) -> bool {
+    ) -> Option<(Color, Ray)> {
 
         let mut scatter_direction = match &self.distribution {
             Distribution::Uniform => rec.normal + random_in_hemisphere(rec.normal), 
@@ -43,8 +41,8 @@ impl Material for Lambertian {
         if scatter_direction.near_zero() {
             scatter_direction = rec.normal;
         }
-        scattered.clone_from(&Ray::new(rec.p, scatter_direction));
-        attenuation.clone_from(&self.albedo);
-        true
+        let scattered = Ray::new(rec.p, scatter_direction);
+        let attenuation = self.albedo;
+        Some((attenuation, scattered))
     }
 }

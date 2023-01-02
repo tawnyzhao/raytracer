@@ -1,15 +1,18 @@
 use crate::{
     ray::Ray,
-    utils::degrees_to_radians,
     vec3::{Point, Vec3, unit_vector, cross, random_in_unit_disk},
 };
+
+fn degrees_to_radians(degrees: f64) -> f64{
+    return degrees * std::f64::consts::PI / 180.0;
+}
 
 pub struct Camera {
     origin: Point,
     lower_left_corner: Point,
     horizontal: Vec3,
     vertical: Vec3,
-    
+
     #[allow(dead_code)]
     w: Vec3,
     u: Vec3,

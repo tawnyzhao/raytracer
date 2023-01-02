@@ -24,9 +24,7 @@ impl Material for Dielectric {
         &self,
         r_in: &crate::ray::Ray,
         rec: &crate::hittable::HitRecord,
-        attenuation: &mut crate::vec3::Color,
-        scattered: &mut crate::ray::Ray,
-    ) -> bool {
+    ) -> Option<(Color, Ray)> {
         let refraction_ratio = if rec.front_face {
             1.0 / self.index_of_refraction
         } else {
@@ -44,8 +42,8 @@ impl Material for Dielectric {
             refract(unit_direction, rec.normal, refraction_ratio)
         };
 
-        attenuation.clone_from(&Color::new(1.0, 1.0, 1.0));
-        scattered.clone_from(&Ray::new(rec.p, direction));
-        true
+        let attenuation = Color::new(1.0, 1.0, 1.0);
+        let scattered = Ray::new(rec.p, direction);
+        Some((attenuation, scattered))
     }
 }

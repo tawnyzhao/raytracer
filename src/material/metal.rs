@@ -2,7 +2,7 @@ use crate::{
     material::Material,
     ray::Ray,
     utils::clamp,
-    vec3::{random_in_unit_sphere, reflect, unit_vector, Color},
+    vec3::{random_in_unit_sphere, reflect, unit_vector, Color, dot},
 };
 
 pub struct Metal {
@@ -24,15 +24,17 @@ impl Material for Metal {
         &self,
         r_in: &crate::ray::Ray,
         rec: &crate::hittable::HitRecord,
-        attenuation: &mut Color,
-        scattered: &mut crate::ray::Ray,
-    ) -> bool {
+    ) -> Option<(Color, Ray)> {
         let reflected = reflect(unit_vector(r_in.direction()), rec.normal);
-        scattered.clone_from(&Ray::new(
+        let scattered = Ray::new(
             rec.p,
             reflected + self.fuzz * random_in_unit_sphere(),
-        ));
-        attenuation.clone_from(&self.albedo);
-        true
+        );
+        let attenuation = self.albedo;
+        if dot(scattered.direction(), rec.normal) > 0.0 {
+            Some((attenuation, scattered))
+        } else {
+            None
+        }
     }
 }
