@@ -97,4 +97,5 @@ fn main() {
 
     let image: Vec<Color> = create_image(image_height, image_width, samples_per_pixel, max_depth, &cam, &world);
     print_ppm(&image, image_width, image_height, samples_per_pixel);
+    eprintln!("Done.")
 }

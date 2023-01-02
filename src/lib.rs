@@ -1,5 +1,8 @@
+use std::{sync::Mutex, time::Duration};
+
 use camera::Camera;
 use hittable::{Hittable, HittableList};
+use indicatif::{ProgressBar, ProgressStyle};
 use ray::Ray;
 use rayon::prelude::{IndexedParallelIterator, IntoParallelIterator, ParallelIterator};
 use utils::random_double;
@@ -22,6 +25,17 @@ pub fn create_image(
     cam: &Camera,
     world: &HittableList,
 ) -> Vec<Color> {
+    let progress = Mutex::new(
+        ProgressBar::new(image_height as u64)
+            .with_elapsed(Duration::new(0, 0))
+            .with_style(
+                ProgressStyle::with_template(
+                    "Scanlines remaining:\n {bar:40} {pos}/{len} [{elapsed_precise}]",
+                )
+                .expect("Valid style"),
+            ),
+    );
+
     (0..image_height)
         .into_par_iter()
         .rev()
@@ -38,6 +52,7 @@ pub fn create_image(
                     color
                 })
                 .collect::<Vec<Color>>();
+            progress.lock().unwrap().inc(1);
             rows
         })
         .collect()
